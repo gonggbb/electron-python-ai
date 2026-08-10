@@ -1,0 +1,32 @@
+name: Release App
+
+on:
+  push:
+    tags:
+      - 'v*' # 当推送形如 v1.0.0 的标签时触发发布
+
+jobs:
+  publish:
+    runs-on: macos-latest # 或 windows-latest / ubuntu-latest
+
+    # 关键点 1：必须声明写权限，允许创建 Release 和上传附件
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish with Electron Forge
+        # 关键点 2：将 GitHub Actions 自动生成的 GITHUB_TOKEN 传递给 Forge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run publish
