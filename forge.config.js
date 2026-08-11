@@ -1,6 +1,7 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
-
+// 在文件最开头添加
+// require('dotenv').config();
 module.exports = {
   packagerConfig: {
     asar: true,
@@ -48,7 +49,7 @@ module.exports = {
           owner: 'gonggbb',
           name: 'electron-python-ai'
         },
-        rerelease: false
+        rerelease: true,
       }
     }
   ],

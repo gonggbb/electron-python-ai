@@ -1,32 +1,47 @@
-name: Release App
+name: Build and Publish
 
 on:
+  # 手动触发（推荐先用这个测试）
+  workflow_dispatch:
+  # 或推送 v* 标签时自动发布
   push:
     tags:
-      - 'v*' # 当推送形如 v1.0.0 的标签时触发发布
+      - 'v*'
+
+permissions:
+  contents: write # 必须：允许创建/更新 Release
 
 jobs:
   publish:
-    runs-on: macos-latest # 或 windows-latest / ubuntu-latest
-
-    # 关键点 1：必须声明写权限，允许创建 Release 和上传附件
-    permissions:
-      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Publish with Electron Forge
-        # 关键点 2：将 GitHub Actions 自动生成的 GITHUB_TOKEN 传递给 Forge
+      # Linux 需要额外系统依赖（deb/rpm）
+      - name: Install Linux deps
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm fakeroot dpkg
+
+      - name: Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 如有代码签名证书，可在这里注入环境变量
+          # CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
         run: npm run publish

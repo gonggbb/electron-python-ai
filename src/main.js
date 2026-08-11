@@ -8,7 +8,6 @@ updateElectronApp(); // additional configuration options available 可用的其�
 if (started) {
   app.quit();
 }
-
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
