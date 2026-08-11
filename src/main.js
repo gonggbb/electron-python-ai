@@ -1,8 +1,7 @@
-import { BrowserWindow, app } from 'electron';
+import { app } from 'electron';
 import started from 'electron-squirrel-startup';
 // Const { updateElectronApp } = require('update-electron-app'); //异常
 import { updateElectronApp } from 'update-electron-app';
-import { createWindow } from './modules/createWindow.js';
 
 updateElectronApp(); // Additional configuration options available 可用的其他配置选项
 
@@ -10,20 +9,49 @@ updateElectronApp(); // Additional configuration options available 可用的其�
 if (started) {
   app.quit();
 }
+import path from 'node:path';
+import { BrowserWindow } from 'electron';
+import { getScreenInfo, registerGlobalShortcutTest } from './modules/index.js';
+export let GLOBALS_WINDOW_INSTANCE = null;
 
+const createWindow = () => {
+  console.log('创建窗口...', path.join(__dirname, 'preload.js'));
+  // Create the browser window.
+  const mainWindow = new BrowserWindow({
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
+    width: 800,
+  });
+
+  // And load the index.html of the app.
+  //  ~ createWindow ~ MAIN_WINDOW_VITE_DEV_SERVER_URL: http://localhost:5173
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    // Open the DevTools in development only.
+    mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+  }
+};
 // This method will be called when Electron has finished 这个方法将在Electron完成时被调用
 // Initialization and is ready to create browser windows.初始化，并准备创建浏览器窗口。
 // Some APIs can only be used after this event occurs. 有些api只能在此事件发生后使用。
 app.whenReady().then(() => {
-  createWindow();
+  GLOBALS_WINDOW_INSTANCE = createWindow();
 
   // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的
   // Dock icon is clicked and there are no other windows open.  点击Dock图标，没有其他窗口打开。
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+      GLOBALS_WINDOW_INSTANCE = createWindow();
     }
   });
+  // 获取屏幕信息 getScreenInfo
+  console.log('🚀 ~ getScreenInfo();:', getScreenInfo());
+  // 注册全局快捷键测试
+  registerGlobalShortcutTest(GLOBALS_WINDOW_INSTANCE);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common 当所有窗口都关闭时退出，除了macOS。在那里，这很常见
