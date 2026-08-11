@@ -5,12 +5,15 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './icons/icon',
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        setupIcon: './icons/icon.ico',
+      },
     },
     {
       name: '@electron-forge/maker-zip',
@@ -30,7 +33,7 @@ module.exports = {
     preStart: async (forgeConfig) => {
       console.log('应用即将启动...');
     },
-    // 编译与资源生成钩子（Assets & Read Hooks） 
+    // 编译与资源生成钩子（Assets & Read Hooks）
     readPackageJson: async (forgeConfig, packageJson) => {
       // 动态设置版本号
       packageJson.version = process.env.BUILD_VERSION || packageJson.version;
@@ -39,7 +42,7 @@ module.exports = {
     // 打包后的钩子函数
     postPackage: async (forgeConfig, options) => {
       console.log('打包完成，输出目录：', options.outputPaths);
-    }
+    },
   },
   publishers: [
     {
@@ -47,11 +50,11 @@ module.exports = {
       config: {
         repository: {
           owner: 'gonggbb',
-          name: 'electron-python-ai'
+          name: 'electron-python-ai',
         },
         rerelease: true,
-      }
-    }
+      },
+    },
   ],
   plugins: [
     {

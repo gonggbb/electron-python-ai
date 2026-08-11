@@ -1,43 +1,24 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'node:path';
+import { BrowserWindow, app } from 'electron';
 import started from 'electron-squirrel-startup';
-// const { updateElectronApp } = require('update-electron-app');
+// Const { updateElectronApp } = require('update-electron-app'); //异常
 import { updateElectronApp } from 'update-electron-app';
-updateElectronApp(); // additional configuration options available 可用的其他配置选项
+import { createWindow } from './modules/createWindow.js';
+
+updateElectronApp(); // Additional configuration options available 可用的其他配置选项
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.处理在安装/卸载时在Windows上创建/删除快捷方式。
 if (started) {
   app.quit();
 }
-const createWindow = () => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-    },
-  });
 
-  // and load the index.html of the app.
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
-  } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
-  }
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-};
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+// This method will be called when Electron has finished 这个方法将在Electron完成时被调用
+// Initialization and is ready to create browser windows.初始化，并准备创建浏览器窗口。
+// Some APIs can only be used after this event occurs. 有些api只能在此事件发生后使用。
 app.whenReady().then(() => {
   createWindow();
 
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
+  // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的
+  // Dock icon is clicked and there are no other windows open.  点击Dock图标，没有其他窗口打开。
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -45,14 +26,14 @@ app.whenReady().then(() => {
   });
 });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// Quit when all windows are closed, except on macOS. There, it's common 当所有窗口都关闭时退出，除了macOS。在那里，这很常见
+// For applications and their menu bar to stay active until the user quits 使应用程序及其菜单栏保持活动状态，直到用户退出
+// Explicitly with Cmd + Q. 显式地使用Cmd + Q。
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+// In this file you can include the rest of your app's specific main process 在这个文件中，你可以包含应用程序特定主进程的其余部分
+// Code. You can also put them in separate files and import them here. code. 您也可以将它们放在单独的文件中，然后在这里导入它们。
