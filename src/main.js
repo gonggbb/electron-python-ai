@@ -1,7 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-const { updateElectronApp } = require('update-electron-app');
+// const { updateElectronApp } = require('update-electron-app');
+import { updateElectronApp } from 'update-electron-app';
 updateElectronApp(); // additional configuration options available 可用的其他配置选项
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.处理在安装/卸载时在Windows上创建/删除快捷方式。
