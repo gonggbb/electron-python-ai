@@ -16,15 +16,6 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "lint-staged": {
-    "*.{js,mjs,cjs,vue}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,css,html,yml,yaml}": [
-      "prettier --write"
-    ]
-  },
   "keywords": [],
   "author": {
     "name": "games.gong@pbn.com.cn",
