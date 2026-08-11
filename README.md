@@ -20,3 +20,6 @@ npm install -D husky lint-staged
 
 git add .
 git commit -m "test: husky + lint-staged"
+<!-- 不检验 -->
+
+git commit -m "xxx" --no-verify
