@@ -9,16 +9,24 @@ updateElectronApp(); // Additional configuration options available 可用的其�
 if (started) {
   app.quit();
 }
+
 import path from 'node:path';
 import { BrowserWindow } from 'electron';
-import { getScreenInfo, registerGlobalShortcutTest } from './modules/index.js';
+import {
+  getScreenInfo,
+  registerGlobalShortcutTest,
+  unregisterAllGlobalShortcuts,
+  createTray,
+  registerIpcMain,
+  registerPowerMonitor,
+} from './modules/index.js';
 export let GLOBALS_WINDOW_INSTANCE = null;
-
 const createWindow = () => {
   console.log('创建窗口...', path.join(__dirname, 'preload.js'));
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
+    // 选项中将预加载脚本附加到主进程webPreferences
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -34,6 +42,20 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
+  // 获取屏幕信息 getScreenInfo
+  console.log('🚀 ~ getScreenInfo();:', getScreenInfo());
+  // 注册全局快捷键测试
+  registerGlobalShortcutTest(mainWindow);
+  // 创建系统托盘
+  createTray(mainWindow);
+  // 注册IPC通信
+  registerIpcMain(mainWindow);
+  // 注册电源监控
+  registerPowerMonitor();
+  // 窗口关闭事件
+  mainWindow.on('closed', () => {
+    console.log('窗口已关闭');
+  });
 };
 // This method will be called when Electron has finished 这个方法将在Electron完成时被调用
 // Initialization and is ready to create browser windows.初始化，并准备创建浏览器窗口。
@@ -41,22 +63,19 @@ const createWindow = () => {
 app.whenReady().then(() => {
   GLOBALS_WINDOW_INSTANCE = createWindow();
 
-  // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的
+  // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的 MacOS 激活窗口逻辑
   // Dock icon is clicked and there are no other windows open.  点击Dock图标，没有其他窗口打开。
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       GLOBALS_WINDOW_INSTANCE = createWindow();
     }
   });
-  // 获取屏幕信息 getScreenInfo
-  console.log('🚀 ~ getScreenInfo();:', getScreenInfo());
-  // 注册全局快捷键测试
-  registerGlobalShortcutTest(GLOBALS_WINDOW_INSTANCE);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common 当所有窗口都关闭时退出，除了macOS。在那里，这很常见
 // For applications and their menu bar to stay active until the user quits 使应用程序及其菜单栏保持活动状态，直到用户退出
 // Explicitly with Cmd + Q. 显式地使用Cmd + Q。
+// 所有窗口关闭退出（Windows/Linux）
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
@@ -65,3 +84,13 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process 在这个文件中，你可以包含应用程序特定主进程的其余部分
 // Code. You can also put them in separate files and import them here. code. 您也可以将它们放在单独的文件中，然后在这里导入它们。
+
+// 程序退出前注销全局快捷键，释放资源
+app.on('will-quit', () => {
+  unregisterAllGlobalShortcuts();
+});
+
+// window.myAPI = {
+//   desktop: true,
+// };
+// console.log(window.myAPI);
