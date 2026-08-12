@@ -29,6 +29,9 @@
 import './index.css';
 import { createApp } from 'vue';
 import App from './App.vue';
+// 引入组件库的少量全局样式变量
+import 'tdesign-vue-next/es/style/index.css';
+import { Button as TButton } from 'tdesign-vue-next';
 
-createApp(App).mount('#app');
+createApp(App).use(TButton).mount('#app');
 console.log('👋 This message is being logged by "renderer.js", included via Vite');
