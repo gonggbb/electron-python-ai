@@ -8,9 +8,6 @@ npm install --save-dev \
   @electron-forge/maker-deb \
   @electron-forge/maker-rpm
 
-# 发布
-git tag v1.0.2 && git push origin v1.0.2
-
 npm install vue
 npm install --save-dev @vitejs/plugin-vue
 
@@ -20,6 +17,20 @@ npm install -D husky lint-staged
 npx husky init
 
 npm install -D @commitlint/cli @commitlint/config-conventional
+
+# 发布
+git tag v0.1.2 && git push origin v0.1.2
+git ls-remote --tags origin
+git tag -d v1.0.1 && git push origin --delete v1.0.1
+git log --oneline
+git log -5
+git log --grep="fix "
+git log --stat
+git log --since="2 weeks ago"
+git log --after="2024-01-01" --before="2024-06-01"
+git log --pretty=format:"%h - %an, %ar : %s"
+# 回退最近 1 次提交 保留‌暂存区和工作区的修改
+git reset --soft HEAD~1
 
 git add .
 git commit -m "test: husky + lint-staged"

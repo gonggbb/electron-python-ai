@@ -5,6 +5,10 @@ import { ipcRenderer, contextBridge } from 'electron';
 console.log('========== PRELOAD LOADED preload.js ==========');
 // 对外挂载 window.electronAPI
 contextBridge.exposeInMainWorld('electronAPI', {
+  /**
+   * send/on 和 invoke/handle 不要混用
+   * @returns
+   */
   // 打开文件夹对话框
   openFolderDialog: () => ipcRenderer.invoke('open-folder'),
   // 弹出系统通知
