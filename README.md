@@ -19,7 +19,7 @@ npx husky init
 npm install -D @commitlint/cli @commitlint/config-conventional
 
 # 发布
-git tag v0.1.2 && git push origin v0.1.2
+git tag v0.1.3 && git push origin v0.1.3
 git ls-remote --tags origin
 git tag -d v1.0.1 && git push origin --delete v1.0.1
 git log --oneline
