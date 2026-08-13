@@ -15,6 +15,13 @@ const routes = [
     meta: { title: 'about' },
     children: [],
   },
+  {
+    path: '/version',
+    name: 'Version',
+    component: () => import('@/pages/version/index.vue'),
+    meta: { title: 'version' },
+    children: [],
+  },
   // 404 页面
   {
     path: '/:pathMatch(.*)*',

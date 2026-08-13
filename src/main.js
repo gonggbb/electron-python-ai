@@ -1,4 +1,3 @@
-// import { app, dialog, ipcMain, shell, Notification } from 'electron';
 import { app } from 'electron';
 import started from 'electron-squirrel-startup';
 // Const { updateElectronApp } = require('update-electron-app'); //异常
@@ -83,33 +82,6 @@ const createWindow = () => {
 app.whenReady().then(() => {
   // Main 进程必须注册 ipcMain.handle
   registerIpcMain(globalsWindowInstance);
-  // ipcMain.handle('app:get-version', () => {
-  //   return app.getVersion();
-  // });
-  // ipcMain.handle('app:ping', () => {
-  //   console.log('[main] app:ping');
-
-  //   return 'pong';
-  // });
-  // ipcMain.handle('open-folder', async () => {
-  //   const result = await dialog.showOpenDialog(globalsWindowInstance, {
-  //     properties: ['openDirectory'],
-  //   });
-  //   return result.filePaths;
-  // });
-
-  // ipcMain.on('send-notification', () => {
-  //   // 6. Notification 系统桌面通知
-  //   new Notification({
-  //     title: 'Electron通知',
-  //     body: '来自主进程的桌面推送',
-  //   }).show();
-  // });
-
-  // ipcMain.on('open-url', (_, url) => {
-  //   // 7. Shell 调用系统默认程序打开链接/文件
-  //   shell.openExternal(url);
-  // });
   globalsWindowInstance = createWindow();
 
   // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的 MacOS 激活窗口逻辑

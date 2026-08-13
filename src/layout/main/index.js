@@ -8,6 +8,10 @@ export const useHome = () => {
       router: '/',
     },
     {
+      label: 'Version',
+      router: '/version',
+    },
+    {
       label: 'About',
       router: '/about',
     },

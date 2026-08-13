@@ -19,4 +19,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getVersion: () => ipcRenderer.invoke('app:get-version'),
   // ping-pong 测试
   ping: () => ipcRenderer.invoke('app:ping'),
+  // 版本更新检查
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+  // 获取远程版本列表
+  getRemoteVersionList: () => ipcRenderer.invoke('get-remote-versions'),
 });
