@@ -1,4 +1,4 @@
-import { dialog, ipcMain, shell, Notification } from 'electron';
+import { app, dialog, ipcMain, shell, Notification } from 'electron';
 
 // ========== 5. IPC 主进程监听渲染进程消息 ==========
 /**
@@ -8,8 +8,29 @@ import { dialog, ipcMain, shell, Notification } from 'electron';
  * 请改用该contextBridge模块以安全地完成此操作：
  * 通过向渲染器公开ipcRenderer辅助函数，您可以使用进程间通信 (IPC) 从渲染器触发主进程任务（反之亦然）。
  * 如果您正在为托管在远程 URL 上的现有 Web 应用程序开发 Electron 包装器，则可以向渲染器的window全局变量添加自定义属性，这些属性可用于 Web 客户端的仅限桌面逻辑。
+    Renderer
+      │
+      │ window.electronAPI.ping()
+      ↓
+    Preload
+      │
+      │ ipcRenderer.invoke('app:ping')
+      ↓
+    Main
+      │
+      │ ipcMain.handle('app:ping')
+      ↓
+    "pong"
  */
 export const registerIpcMain = (mainWindow) => {
+  ipcMain.handle('app:get-version', () => {
+    return app.getVersion();
+  });
+  ipcMain.handle('app:ping', () => {
+    console.log('[main] app:ping');
+
+    return 'pong';
+  });
   ipcMain.handle('open-folder', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
       properties: ['openDirectory'],

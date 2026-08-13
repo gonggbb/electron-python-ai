@@ -4,6 +4,7 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 // require('dotenv').config();
 module.exports = {
   packagerConfig: {
+    // `asar` 是 Electron 自研的**类压缩打包格式**
     asar: true,
     icon: './icons/icon',
   },

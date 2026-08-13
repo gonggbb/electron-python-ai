@@ -1,10 +1,16 @@
+// import { app, dialog, ipcMain, shell, Notification } from 'electron';
 import { app } from 'electron';
 import started from 'electron-squirrel-startup';
 // Const { updateElectronApp } = require('update-electron-app'); //异常
 import { updateElectronApp } from 'update-electron-app';
 
-updateElectronApp(); // Additional configuration options available 可用的其他配置选项
-
+try {
+  updateElectronApp({
+    repo: 'gonggbb/electron-python-ai', // 显式指定，避免靠 name 推断出错
+  });
+} catch (e) {
+  console.error('[main] updateElectronApp skipped:', e);
+}
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.处理在安装/卸载时在Windows上创建/删除快捷方式。
 if (started) {
   app.quit();
@@ -20,21 +26,33 @@ import {
   registerIpcMain,
   registerPowerMonitor,
 } from './modules/index.js';
-export let GLOBALS_WINDOW_INSTANCE = null;
+
+export let globalsWindowInstance = null;
+
 const createWindow = () => {
-  console.log('创建窗口...', path.join(__dirname, 'preload.js'));
+  console.log('创建窗口...__dirname', __dirname, app.getAppPath());
+  console.log(
+    '🚀 ~ createWindow ~ MAIN_WINDOW_VITE_DEV_SERVER_URL:',
+    MAIN_WINDOW_VITE_NAME,
+    MAIN_WINDOW_VITE_DEV_SERVER_URL,
+  );
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
     // 选项中将预加载脚本附加到主进程webPreferences
     webPreferences: {
+      // 无法直接访问 Node.js API 或 Electron 的内部对象，也不能轻易篡改 Preload 暴露的接口
+      contextIsolation: true,
+      // 禁止渲染进程直接使用 Node.js
+      nodeIntegration: false,
+      // 是否启用操作系统级沙箱。
+      sandbox: false,
       preload: path.join(__dirname, 'preload.js'),
     },
     width: 800,
   });
 
   // And load the index.html of the app.
-  //  ~ createWindow ~ MAIN_WINDOW_VITE_DEV_SERVER_URL: http://localhost:5173
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     // Open the DevTools in development only.
@@ -42,6 +60,8 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
+  // 根据打包状态选择加载方式
+  console.log('🚀 ~ createWindow ~ isPackaged:', app.isPackaged);
   // 获取屏幕信息 getScreenInfo
   console.log('🚀 ~ getScreenInfo();:', getScreenInfo());
   // 注册全局快捷键测试
@@ -49,7 +69,7 @@ const createWindow = () => {
   // 创建系统托盘
   createTray(mainWindow);
   // 注册IPC通信
-  registerIpcMain(mainWindow);
+  // registerIpcMain(mainWindow);
   // 注册电源监控
   registerPowerMonitor();
   // 窗口关闭事件
@@ -61,13 +81,42 @@ const createWindow = () => {
 // Initialization and is ready to create browser windows.初始化，并准备创建浏览器窗口。
 // Some APIs can only be used after this event occurs. 有些api只能在此事件发生后使用。
 app.whenReady().then(() => {
-  GLOBALS_WINDOW_INSTANCE = createWindow();
+  // Main 进程必须注册 ipcMain.handle
+  registerIpcMain(globalsWindowInstance);
+  // ipcMain.handle('app:get-version', () => {
+  //   return app.getVersion();
+  // });
+  // ipcMain.handle('app:ping', () => {
+  //   console.log('[main] app:ping');
+
+  //   return 'pong';
+  // });
+  // ipcMain.handle('open-folder', async () => {
+  //   const result = await dialog.showOpenDialog(globalsWindowInstance, {
+  //     properties: ['openDirectory'],
+  //   });
+  //   return result.filePaths;
+  // });
+
+  // ipcMain.on('send-notification', () => {
+  //   // 6. Notification 系统桌面通知
+  //   new Notification({
+  //     title: 'Electron通知',
+  //     body: '来自主进程的桌面推送',
+  //   }).show();
+  // });
+
+  // ipcMain.on('open-url', (_, url) => {
+  //   // 7. Shell 调用系统默认程序打开链接/文件
+  //   shell.openExternal(url);
+  // });
+  globalsWindowInstance = createWindow();
 
   // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的 MacOS 激活窗口逻辑
   // Dock icon is clicked and there are no other windows open.  点击Dock图标，没有其他窗口打开。
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      GLOBALS_WINDOW_INSTANCE = createWindow();
+      globalsWindowInstance = createWindow();
     }
   });
 });
