@@ -11,5 +11,6 @@
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "i18n-ally.localesPaths": ["src/i18n", "out/AIAssistant-win32-x64/locales", "src/i18n/locales"]
 }

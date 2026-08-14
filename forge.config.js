@@ -7,6 +7,10 @@ module.exports = {
     // `asar` 是 Electron 自研的**类压缩打包格式**
     asar: true,
     icon: './icons/icon',
+    // 把 icons 目录整个复制到 resources 下
+    extraResource: [
+      './icons', // 或者只写单个文件 './icons/icon.png'
+    ],
   },
   rebuildConfig: {},
   makers: [

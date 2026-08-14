@@ -66,7 +66,7 @@ const createWindow = () => {
   // 注册全局快捷键测试
   registerGlobalShortcutTest(mainWindow);
   // 创建系统托盘
-  createTray(mainWindow);
+  // createTray(mainWindow);
   // 注册IPC通信
   // registerIpcMain(mainWindow);
   // 注册电源监控
@@ -75,6 +75,7 @@ const createWindow = () => {
   mainWindow.on('closed', () => {
     console.log('窗口已关闭');
   });
+  return mainWindow;
 };
 // This method will be called when Electron has finished 这个方法将在Electron完成时被调用
 // Initialization and is ready to create browser windows.初始化，并准备创建浏览器窗口。
@@ -83,7 +84,8 @@ app.whenReady().then(() => {
   // Main 进程必须注册 ipcMain.handle
   registerIpcMain(globalsWindowInstance);
   globalsWindowInstance = createWindow();
-
+  // 创建系统托盘
+  createTray(globalsWindowInstance);
   // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的 MacOS 激活窗口逻辑
   // Dock icon is clicked and there are no other windows open.  点击Dock图标，没有其他窗口打开。
   app.on('activate', () => {
