@@ -42,4 +42,14 @@ npm install -D @tdesign-vue-next/auto-import-resolver unplugin-vue-components un
 npm i tdesign-vue-next
 
 npm install vue-router@4 pinia axios vue-i18n@11
+
+
+npm install -D release-it
+# 交互式选择（推荐）
+npm run release
+
+# 或者直接指定版本类型（CI 友好）
+npm run release:patch   # 1.0.0 → 1.0.1
+npm run release:minor   # 1.0.0 → 1.1.0
+npm run release:major   # 1.0.0 → 2.0.0
 ```
