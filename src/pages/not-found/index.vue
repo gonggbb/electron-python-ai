@@ -1,13 +1,11 @@
 <template>
   <layout>
     <template #content>
-      <t-empty type="maintenance" :size="size"></t-empty>
+      <t-empty type="maintenance" size="large"></t-empty>
     </template>
   </layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import layout from '@/layout/main/index.vue';
-import { ref } from 'vue';
-let size = ref('large');
 </script>

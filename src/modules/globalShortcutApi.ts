@@ -1,7 +1,7 @@
 import { globalShortcut, dialog } from 'electron';
 
 // ========== 3. GlobalShortcut 全局快捷键 ==========
-export const registerGlobalShortcutTest = (mainWindow) => {
+export const registerGlobalShortcutTest = (mainWindow: Electron.BrowserWindow) => {
   const success = globalShortcut.register('Ctrl+Shift+D', () => {
     dialog.showMessageBox(mainWindow, { message: '全局快捷键触发：Ctrl+Shift+D' });
   });
@@ -12,7 +12,7 @@ export const registerGlobalShortcutTest = (mainWindow) => {
 
   return success;
 };
-export const registerGlobalShortcut = (shortcut, callback) => {
+export const registerGlobalShortcut = (shortcut: string, callback: () => void) => {
   const success = globalShortcut.register(shortcut, callback);
   if (!success) {
     console.error(`注册全局快捷键失败: ${shortcut}`);
@@ -20,7 +20,7 @@ export const registerGlobalShortcut = (shortcut, callback) => {
   return success;
 };
 
-export const unregisterGlobalShortcut = (shortcut) => {
+export const unregisterGlobalShortcut = (shortcut: string) => {
   globalShortcut.unregister(shortcut);
 };
 

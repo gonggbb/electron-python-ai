@@ -14,7 +14,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 弹出系统通知
   showNotification: () => ipcRenderer.send('send-notification'),
   // 调用系统浏览器打开网址
-  openExternalUrl: (url) => ipcRenderer.send('open-url', url),
+  openExternalUrl: (url: string) => ipcRenderer.send('open-url', url),
   // 获取版本号
   getVersion: () => ipcRenderer.invoke('app:get-version'),
   // ping-pong 测试

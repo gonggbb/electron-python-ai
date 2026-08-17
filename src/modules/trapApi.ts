@@ -4,7 +4,7 @@ import { app } from 'electron';
 
 // ========== 4. 系统托盘 Tray + Menu 右键菜单 ==========
 let appTray = null;
-export const createTray = (mainWindow) => {
+export const createTray = (mainWindow: Electron.BrowserWindow) => {
   // 生产环境兼容写法
   const iconPath = app.isPackaged
     ? path.join(process.resourcesPath, 'icons/icon.png') // 打包后放 resources 里

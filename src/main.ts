@@ -3,16 +3,20 @@ import started from 'electron-squirrel-startup';
 // Const { updateElectronApp } = require('update-electron-app'); //异常
 import { updateElectronApp } from 'update-electron-app';
 
-try {
-  updateElectronApp({
-    repo: 'gonggbb/electron-python-ai', // 显式指定，避免靠 name 推断出错
-  });
-} catch (e) {
-  console.error('[main] updateElectronApp skipped:', e);
-}
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.处理在安装/卸载时在Windows上创建/删除快捷方式。
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// 处理在安装/卸载时在Windows上创建/删除快捷方式。
+// 必须在任何副作用（如自动更新、创建窗口）之前执行并退出，
+// 否则 Squirrel 安装/卸载事件会触发不必要的初始化。
 if (started) {
   app.quit();
+} else {
+  try {
+    updateElectronApp({
+      repo: 'gonggbb/electron-python-ai', // 显式指定，避免靠 name 推断出错
+    });
+  } catch (e) {
+    console.error('[main] updateElectronApp skipped:', e);
+  }
 }
 
 import path from 'node:path';
@@ -24,9 +28,9 @@ import {
   createTray,
   registerIpcMain,
   registerPowerMonitor,
-} from './modules/index.js';
+} from './modules/index';
 
-export let globalsWindowInstance = null;
+export let globalsWindowInstance: Electron.BrowserWindow;
 
 const createWindow = () => {
   console.log('创建窗口...__dirname', __dirname, app.getAppPath());
@@ -46,6 +50,7 @@ const createWindow = () => {
       nodeIntegration: false,
       // 是否启用操作系统级沙箱。
       sandbox: false,
+      // 产物文件名
       preload: path.join(__dirname, 'preload.js'),
     },
     width: 800,
@@ -81,9 +86,10 @@ const createWindow = () => {
 // Initialization and is ready to create browser windows.初始化，并准备创建浏览器窗口。
 // Some APIs can only be used after this event occurs. 有些api只能在此事件发生后使用。
 app.whenReady().then(() => {
-  // Main 进程必须注册 ipcMain.handle
-  registerIpcMain(globalsWindowInstance);
+  // 先创建窗口，拿到可用的 BrowserWindow 实例
   globalsWindowInstance = createWindow();
+  // 再注册 ipcMain.handle（open-folder 等 handler 依赖 mainWindow）
+  registerIpcMain(globalsWindowInstance);
   // 创建系统托盘
   createTray(globalsWindowInstance);
   // On OS X it's common to re-create a window in the app when the 在OS X上，在应用程序中重新创建一个窗口是很常见的 MacOS 激活窗口逻辑

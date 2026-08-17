@@ -21,7 +21,7 @@ import { app, dialog, ipcMain, shell, Notification, autoUpdater } from 'electron
       ↓
     "pong"
  */
-export const registerIpcMain = (mainWindow) => {
+export const registerIpcMain = (mainWindow: Electron.BrowserWindow) => {
   ipcMain.handle('app:get-version', () => {
     return app.getVersion();
   });
@@ -73,14 +73,18 @@ export const registerIpcMain = (mainWindow) => {
         resolve({ status: 'not-available', message: '当前已是最新版本' });
       };
 
-      const onError = (err) => {
+      const onError = (err: Error) => {
         if (resolved) return;
         resolved = true;
         cleanup();
         resolve({ status: 'error', message: err.message });
       };
 
-      const onDownloaded = (event, releaseNotes, releaseName) => {
+      const onDownloaded = (
+        event: Electron.IpcMainEvent,
+        releaseNotes: string,
+        releaseName: string,
+      ) => {
         // 下载完成后再提示用户重启
         dialog
           .showMessageBox({
@@ -105,7 +109,8 @@ export const registerIpcMain = (mainWindow) => {
       autoUpdater.once('update-available', onAvailable);
       autoUpdater.once('update-not-available', onNotAvailable);
       autoUpdater.once('error', onError);
-      autoUpdater.on('update-downloaded', onDownloaded);
+      // ts检测的
+      // autoUpdater.on('update-downloaded', onDownloaded);
 
       autoUpdater.checkForUpdates();
     });
@@ -125,7 +130,7 @@ export const registerIpcMain = (mainWindow) => {
     });
     if (!res.ok) throw new Error('获取版本列表失败');
 
-    const releases = await res.json();
+    const releases: any[] = await res.json();
 
     // 只保留正式版（过滤 draft / prerelease）
     return releases
@@ -136,7 +141,7 @@ export const registerIpcMain = (mainWindow) => {
         publishedAt: r.published_at,
         body: r.body, // 更新日志
         htmlUrl: r.html_url,
-        assets: r.assets.map((a) => ({
+        assets: r.assets.map((a: any) => ({
           name: a.name,
           downloadUrl: a.browser_download_url,
           size: a.size,

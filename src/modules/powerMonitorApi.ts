@@ -13,10 +13,10 @@ export const registerPowerMonitor = () => {
   powerMonitor.on('unlock-screen', () => {
     console.log('电脑解锁');
   });
-
-  powerMonitor.on('abnormal-shutdown', () => {
-    console.log('电脑异常关机');
-  });
+  //  ts检测的
+  // powerMonitor.on('abnormal-shutdown', () => {
+  //   console.log('电脑异常关机');
+  // });
 
   powerMonitor.on('suspend', () => {
     console.log('电脑进入休眠');

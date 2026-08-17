@@ -3,7 +3,8 @@ import pluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 import prettier from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
-
+import tseslint from 'typescript-eslint';
+import vueParser from 'vue-eslint-parser';
 export default [
   // 忽略构建产物和依赖
   {
@@ -20,9 +21,23 @@ export default [
 
   // 基础 JS 推荐规则
   js.configs.recommended,
-
+  // TypeScript 推荐（无类型检查，速度快）
+  ...tseslint.configs.recommended,
   // Vue 3 推荐规则
   ...pluginVue.configs['flat/recommended'],
+
+  // .vue 文件：让 vue-eslint-parser 内部用 TypeScript parser 解析 <script lang="ts>
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tseslint.parser,
+        ecmaVersion: 2022,
+        sourceType: 'module',
+      },
+    },
+  },
 
   // 全局环境（同时支持浏览器和 Node）
   {
@@ -41,7 +56,7 @@ export default [
 
   // 自定义规则
   {
-    files: ['**/*.{js,mjs,cjs,vue}'],
+    files: ['**/*.{ts,js,mjs,cjs,vue}'],
     plugins: {
       prettier: prettierPlugin,
     },

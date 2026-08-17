@@ -71,7 +71,7 @@
   </t-layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTheme } from '@/hooks/useTheme';
 import { useHome } from './index.js';
 let { checked, topMenuList, sideMenuList } = useHome();

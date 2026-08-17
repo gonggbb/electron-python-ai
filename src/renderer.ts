@@ -42,13 +42,18 @@ import App from './App.vue';
 import 'tdesign-vue-next/es/style/index.css';
 import { Button as TButton } from 'tdesign-vue-next';
 import { createPinia } from 'pinia';
-import router from './router/index.js';
-import i18n from './i18n/index.js';
+import router from './router/index';
+import i18n from './i18n/index';
 
 const pinia = createPinia();
 createApp(App).use(TButton).use(pinia).use(router).use(i18n).mount('#app');
 
-console.log('👋 This message is being logged by "renderer.js", included via Vite');
-console.log(window.electronAPI);
-console.log('getVersion:', window.electronAPI.getVersion);
-window.electronAPI.ping().then(console.log);
+// 验证 preload 暴露的 IPC API 是否可用，并测试 ping-pong 通道
+if (window.electronAPI) {
+  window.electronAPI
+    .ping()
+    .then((res) => console.log('IPC ping ->', res))
+    .catch((err) => console.error('IPC ping failed:', err));
+} else {
+  console.warn('electronAPI 未暴露，请检查 preload 脚本是否正常加载');
+}

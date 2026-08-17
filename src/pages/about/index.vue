@@ -11,7 +11,7 @@
   </layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useCounterStore } from '@/stores/counter';

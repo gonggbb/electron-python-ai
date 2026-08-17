@@ -1,4 +1,4 @@
-import request from '../modules/request';
+import request from './request';
 
 export function getUserInfo() {
   return request({

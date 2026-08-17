@@ -6,7 +6,7 @@ export const useAppStore = defineStore(
   () => {
     const locale = ref(localStorage.getItem('locale') || 'zh-CN');
 
-    function setLocale(lang) {
+    function setLocale(lang: string) {
       locale.value = lang;
       localStorage.setItem('locale', lang);
     }

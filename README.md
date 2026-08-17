@@ -52,4 +52,9 @@ npm run release
 npm run release:patch   # 1.0.0 → 1.0.1
 npm run release:minor   # 1.0.0 → 1.1.0
 npm run release:major   # 1.0.0 → 2.0.0
+
+npx create-electron-app@latest my-app-ts --template=vite-typescript
+
+# 安装适配 ESLint 10 的 TS 工具链
+npm install -D typescript@~5.8 typescript-eslint vue-tsc
 ```

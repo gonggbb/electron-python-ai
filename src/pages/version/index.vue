@@ -45,49 +45,48 @@
             ]
         }
       -->
-      <t-card v-for="item in versions" :key="item.tag" bordered>
+      <t-card v-for="version in versions" :key="version.tag" bordered>
         <t-row
-          v-for="item in [
+          v-for="row in [
             {
               label: 'Tag',
-              value: item.tag,
+              value: version.tag,
             },
             {
               label: 'Name',
-              value: item.name,
+              value: version.name,
             },
             {
               label: 'Published At',
-              value: item.publishedAt,
+              value: version.publishedAt,
             },
           ]"
-          :key="item.label"
+          :key="row.label"
           justify="start"
         >
-          <t-col :span="8"> {{ item.label }}</t-col>
+          <t-col :span="8"> {{ row.label }}</t-col>
           <t-col :span="16">
-            <t-tag>{{ item.value }}</t-tag>
+            <t-tag>{{ row.value }}</t-tag>
           </t-col>
         </t-row>
         <t-row>
-          <t-tag>{{ item.htmlUrl }}</t-tag>
+          <t-tag>{{ version.htmlUrl }}</t-tag>
         </t-row>
         <t-list :split="true">
-          <t-list-item v-for="item in item.assets" :key="item.name">
+          <t-list-item v-for="asset in version.assets" :key="asset.name">
             <t-list-item-meta
-              :title="item.name"
-              :description="`Size: ${(item.size / 1024 / 1024).toFixed(2)} MB`"
+              :title="asset.name"
+              :description="`Size: ${(asset.size / 1024 / 1024).toFixed(2)} MB`"
             />
             <template #action>
               <!-- 下载 -->
               <t-button
                 variant="text"
                 shape="square"
-                href="item.downloadUrl"
+                :href="asset.downloadUrl"
                 target="_blank"
                 download
               >
-                <!-- {{ item.downloadUrl }} -->
                 <download-icon />
               </t-button>
             </template>
@@ -98,11 +97,12 @@
   </layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import layout from '@/layout/main/index.vue';
 import { DownloadIcon } from 'tdesign-icons-vue-next';
+import { RemoteVersion } from '@/types/remote';
 const checking = ref(false);
 const msg = ref('');
 
@@ -120,18 +120,27 @@ async function onCheckUpdate() {
       MessagePlugin.warning(res.message);
     }
   } catch (e) {
-    MessagePlugin.error(e.message || '检查失败');
+    const error = e as Error;
+    MessagePlugin.error(error.message || '检查失败');
   } finally {
     checking.value = false;
   }
 }
 
-let versions = ref([]);
+const versions = ref<RemoteVersion[]>([]);
 const getRemoteVersions = async () => {
-  const remoteVersions = await window.electronAPI.getRemoteVersionList();
-  console.log('Remote Versions:', remoteVersions);
-  versions.value = remoteVersions;
-  return remoteVersions;
+  if (!window.electronAPI) {
+    MessagePlugin.error('未检测到主进程 API，请确认 preload 已正确注入');
+    return;
+  }
+  try {
+    const remoteVersions = await window.electronAPI.getRemoteVersionList();
+    console.log('Remote Versions:', remoteVersions);
+    versions.value = remoteVersions ?? [];
+  } catch (e) {
+    const error = e as Error;
+    MessagePlugin.error(error.message || '获取远程版本列表失败');
+  }
 };
 onMounted(() => {
   getRemoteVersions();
