@@ -52,8 +52,8 @@ createApp(App).use(TButton).use(pinia).use(router).use(i18n).mount('#app');
 if (window.electronAPI) {
   window.electronAPI
     .ping()
-    .then((res) => console.log('IPC ping ->', res))
-    .catch((err) => console.error('IPC ping failed:', err));
+    .then((res: string) => console.log('IPC ping ->', res))
+    .catch((err: string) => console.error('IPC ping failed:', err));
 } else {
   console.warn('electronAPI 未暴露，请检查 preload 脚本是否正常加载');
 }
