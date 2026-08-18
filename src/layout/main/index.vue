@@ -11,13 +11,16 @@
           }
         "
       >
-        <template #logo>
-          <img
+        <!-- <template #logo> <img
             width="136"
             class="logo"
             src="https://www.tencent.com/img/index/menu_logo_hover.png"
             alt="logo"
+        
           />
+          </template> -->
+        <template #logo>
+          <img :width="collapsed ? 35 : 136" :src="iconUrl" alt="logo" />
         </template>
         <template v-for="menuListItem in topMenuList" :key="menuListItem.router">
           <t-menu-item :value="menuListItem.router">
@@ -38,7 +41,10 @@
     </t-header>
     <t-layout>
       <t-aside style="border-top: 1px solid var(--component-border)">
-        <t-menu theme="light" value="dashboard" style="margin-right: 50px" height="550px">
+        <t-menu :collapsed="collapsed" theme="light" height="550px" @change="changeHandler">
+          <!-- <template #logo>
+            <img :width="collapsed ? 35 : 136" :src="iconUrl" alt="logo" />
+          </template> -->
           <template v-for="menuListItem in sideMenuList" :key="menuListItem.router">
             <t-menu-item :value="menuListItem.router">
               <template #icon>
@@ -46,6 +52,16 @@
               </template>
               {{ menuListItem.label }}
             </t-menu-item>
+          </template>
+          <template #operations>
+            <t-button
+              class="t-demo-collapse-btn"
+              variant="text"
+              shape="square"
+              @click="changeCollapsed"
+            >
+              <template #icon><t-icon name="view-list" /></template>
+            </t-button>
           </template>
         </t-menu>
       </t-aside>
@@ -74,9 +90,29 @@
 <script setup lang="ts">
 import { useTheme } from '@/hooks/useTheme';
 import { useHome } from './index.js';
+import { useRoute, useRouter } from 'vue-router';
+import { CalendarIcon } from 'tdesign-icons-vue-next';
 let { checked, topMenuList, sideMenuList } = useHome();
-import { useRouter } from 'vue-router';
 const router = useRouter();
+const route = useRoute();
+console.log(route.path);
+import { ref } from 'vue';
+import type { MenuProps, ButtonProps } from 'tdesign-vue-next';
+
+const collapsed = ref(true);
+const iconUrl = ref(
+  'https://oteam-tdesign-1258344706.cos.ap-guangzhou.myqcloud.com/site/logo%402x.png',
+);
+const changeCollapsed: ButtonProps['onClick'] = () => {
+  collapsed.value = !collapsed.value;
+  iconUrl.value = collapsed.value
+    ? 'https://oteam-tdesign-1258344706.cos.ap-guangzhou.myqcloud.com/site/logo%402x.png'
+    : 'https://tdesign.gtimg.com/site/baseLogo-light.png';
+};
+const changeHandler: MenuProps['onChange'] = (active) => {
+  console.log('change', active);
+  router.push(active as string);
+};
 </script>
 
 <style scoped>
@@ -84,5 +120,14 @@ button {
   margin: 8px;
   padding: 6px 12px;
   cursor: pointer;
+}
+.t-layout__sider {
+  width: unset;
+}
+
+.t-icon {
+  /* 比例 1：1*/
+  width: 20px;
+  aspect-ratio: 1 / 1;
 }
 </style>

@@ -22,6 +22,13 @@ const routes = [
     meta: { title: 'version' },
     children: [],
   },
+  {
+    path: '/skills',
+    name: 'Skills',
+    component: () => import('@/pages/skills/index.vue'),
+    meta: { title: 'skills' },
+    children: [],
+  },
   // 404 页面
   {
     path: '/:pathMatch(.*)*',
