@@ -92,6 +92,7 @@ typings/
 out/
 
 USE*.md
+usedocs
 
 auto-imports.d.ts
 components.d.ts

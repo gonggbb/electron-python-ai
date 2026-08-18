@@ -1,0 +1,10 @@
+# 强制 Git 以 LF 存库、以 LF 检出，统一行尾
+* text=auto eol=lf
+
+# 二进制文件不要做行尾转换
+*.png binary
+*.jpg binary
+*.ico binary
+*.icns binary
+*.gif binary
+*.webp binary

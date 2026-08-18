@@ -2,7 +2,7 @@ import { onMounted, ref } from 'vue';
 export const useHome = () => {
   const checked = ref(true);
   console.log('👋 This message is being logged by "App.vue", included via Vite');
-  let topMenuList = ref([
+  const topMenuList = ref([
     {
       label: 'Home',
       router: '/',
@@ -44,7 +44,7 @@ export const useHome = () => {
       router: '/openwiki',
     },
   ]);
-  let sideMenuList = ref([
+  const sideMenuList = ref([
     {
       label: 'Skills',
       router: '/skills',

@@ -5,7 +5,7 @@
         value="item1"
         height="120px"
         @change="
-          (value) => {
+          (value: string) => {
             console.log(value);
             router.push(value);
           }

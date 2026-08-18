@@ -1,8 +1,8 @@
-import { getScreenInfo } from './screenApi.js';
-import { registerGlobalShortcutTest, unregisterAllGlobalShortcuts } from './globalShortcutApi.js';
-import { createTray } from './trapApi.js';
-import { registerIpcMain } from './ipcApi.js';
-import { registerPowerMonitor } from './powerMonitorApi.js';
+import { getScreenInfo } from './screenApi';
+import { registerGlobalShortcutTest, unregisterAllGlobalShortcuts } from './globalShortcutApi';
+import { createTray } from './trapApi';
+import { registerIpcMain } from './ipcApi';
+import { registerPowerMonitor } from './powerMonitorApi';
 export {
   getScreenInfo,
   registerGlobalShortcutTest,

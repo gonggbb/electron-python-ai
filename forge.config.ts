@@ -24,6 +24,7 @@ const config: ForgeConfig = {
     new MakerSquirrel({
       setupIcon: './icons/icon.ico',
     }),
+
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),
