@@ -28,7 +28,7 @@ import {
   createTray,
   registerIpcMain,
   registerPowerMonitor,
-} from './modules/index';
+} from './contextBridgeModules/index';
 
 export let globalsWindowInstance: Electron.BrowserWindow;
 
