@@ -1,19 +1,32 @@
 {
   "git": {
-    "commitMessage": "chore: release v${version}",
+    "commitMessage": "chore(release): v${version}",
     "tagName": "v${version}",
     "requireCleanWorkingDir": true,
-    "push": true
+    "requireBranch": "main",
+    "push": true,
+    "pushArgs": ["--follow-tags"]
   },
   "github": {
     "release": true,
     "releaseName": "v${version}",
-    "draft": false
+    "autoGenerate": false,
+    "comments": false
   },
   "npm": {
     "publish": false
   },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md",
+      "header": "# Changelog\n",
+      "ignoreRecommendedBump": false
+    }
+  },
   "hooks": {
-    "after:bump": "echo 版本已更新为 ${version}"
+    "before:init": "echo 开始发版…",
+    "after:bump": "echo 版本已更新为 ${version}，请确认 CHANGELOG.md",
+    "after:release": "echo 已发布 v${version}"
   }
 }
