@@ -22,7 +22,7 @@ export default {
     // 'subject-max-length': [2, 'always', 72],
     // 'body-max-line-length': [2, 'always', 100],
   },
-  // cz-git 专用配置
+  // cz-git 专用配置，可选的；可以使用默认的commitlint
   prompt: {
     types: [
       { value: 'feat', name: '✨ feat:     新功能' },

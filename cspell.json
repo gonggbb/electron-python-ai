@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en, lorem",
+  "words": [],
+  "ignoreWords": [],
+  "flagWords": [],
+  "dictionaries": [
+    "lorem-ipsum",
+    "typescript",
+    "node",
+    "npm",
+    "html",
+    "css",
+    "fonts",
+    "project-words"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "project-words",
+      "path": "./cspell-words.txt",
+      "addWords": true,
+      "description": "项目专用词"
+    }
+  ],
+  "ignorePaths": [
+    "icons",
+    "node_modules",
+    "dist",
+    "out",
+    ".vite",
+    "coverage",
+    "package-lock.json",
+    "CHANGELOG.md",
+    "**/*.min.js",
+    "**/*.map",
+    "**/auto-imports.d.ts",
+    "**/components.d.ts"
+  ],
+  "useGitignore": true,
+  "overrides": [
+    {
+      "filename": "**/*.{ts,tsx,vue,js,mjs,mts}",
+      "language": "en"
+    },
+    {
+      "filename": "**/*.{md,mdx}",
+      "language": "en, lorem"
+    }
+  ]
+}

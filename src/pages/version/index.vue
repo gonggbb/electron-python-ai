@@ -105,7 +105,6 @@ import { DownloadIcon } from 'tdesign-icons-vue-next';
 import { RemoteVersion } from '@/types/remote';
 const checking = ref(false);
 const msg = ref('');
-
 async function onCheckUpdate() {
   checking.value = true;
   msg.value = '';

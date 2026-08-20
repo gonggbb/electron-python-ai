@@ -1,0 +1,20 @@
+# 一行一个词，# 开头为注释
+AIAssistant
+TDesign
+Pinia
+VueUse
+Electron
+Forge
+Squirrel
+AppImage
+contextBridge
+webview
+
+gonggbb
+wuruihong
+langchain
+langgraph
+langsmith
+openwiki
+persistedstate
+sider

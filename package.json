@@ -12,6 +12,7 @@
     "publish": "electron-forge publish",
     "prepare": "husky",
     "commit": "git-cz",
+    "precommit": "lint-staged",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -20,7 +21,9 @@
     "release:patch": "release-it patch",
     "release:minor": "release-it minor",
     "release:major": "release-it major",
-    "release:dry": "release-it --dry-run"
+    "release:dry": "release-it --dry-run",
+    "spellcheck": "cspell \"**/*.{ts,tsx,vue,js,md,json}\" \"--no-progress\"",
+    "spellcheck:all": "cspell \"**\" --no-progress"
   },
   "config": {
     "commitizen": {
@@ -36,6 +39,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
+    "@cspell/dict-lorem-ipsum": "^4.0.5",
     "@electron-forge/cli": "^7.11.2",
     "@electron-forge/maker-deb": "^7.11.2",
     "@electron-forge/maker-rpm": "^7.11.2",
@@ -51,6 +55,7 @@
     "@tdesign-vue-next/auto-import-resolver": "^0.1.7",
     "@vitejs/plugin-vue": "^6.0.8",
     "commitizen": "^4.3.2",
+    "cspell": "^10.0.1",
     "cz-git": "^1.13.2",
     "dotenv": "^17.4.2",
     "electron": "43.3.0",
