@@ -11,6 +11,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "prepare": "husky",
+    "commit": "git-cz",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -20,6 +21,11 @@
     "release:minor": "release-it minor",
     "release:major": "release-it major",
     "release:dry": "release-it --dry-run"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-git"
+    }
   },
   "keywords": [],
   "author": {
@@ -44,6 +50,8 @@
     "@release-it/conventional-changelog": "^11.0.1",
     "@tdesign-vue-next/auto-import-resolver": "^0.1.7",
     "@vitejs/plugin-vue": "^6.0.8",
+    "commitizen": "^4.3.2",
+    "cz-git": "^1.13.2",
     "dotenv": "^17.4.2",
     "electron": "43.3.0",
     "eslint": "^10.8.1",
