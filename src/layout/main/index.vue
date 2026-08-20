@@ -91,7 +91,7 @@
 import { useTheme } from '@/hooks/useTheme';
 import { useHome } from './index.js';
 import { useRoute, useRouter } from 'vue-router';
-import { CalendarIcon } from 'tdesign-icons-vue-next';
+// import { CalendarIcon } from 'tdesign-icons-vue-next';
 let { checked, topMenuList, sideMenuList } = useHome();
 const router = useRouter();
 const route = useRoute();
